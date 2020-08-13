@@ -1,0 +1,817 @@
+{
+  "type": "object",
+  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:Uniprot",
+  "properties": {
+    "copyright": {
+      "type": "string"
+    },
+    "entryList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:Entry",
+        "properties": {
+          "protein": {
+            "type": "object",
+            "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType",
+            "properties": {
+              "recommendedName": {
+                "type": "object",
+                "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:RecommendedName",
+                "properties": {
+                  "fullName": {
+                    "type": "object",
+                    "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "evidenceList": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "shortNameList": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    }
+                  },
+                  "ecNumberList": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    }
+                  }
+                }
+              },
+              "allergenName": {
+                "type": "object",
+                "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+              },
+              "biotechName": {
+                "type": "object",
+                "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+              },
+              "alternativeNameList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:AlternativeName",
+                  "properties": {
+                    "fullName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    },
+                    "shortNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    },
+                    "ecNumberList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    }
+                  }
+                }
+              },
+              "submittedNameList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:SubmittedName",
+                  "properties": {
+                    "fullName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    },
+                    "ecNumberList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    }
+                  }
+                }
+              },
+              "cdAntigenNameList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                }
+              },
+              "innNameList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                }
+              },
+              "domainList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:Domain",
+                  "properties": {
+                    "recommendedName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:RecommendedName"
+                    },
+                    "allergenName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    },
+                    "biotechName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    },
+                    "alternativeNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:AlternativeName"
+                      }
+                    },
+                    "submittedNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:SubmittedName"
+                      }
+                    },
+                    "cdAntigenNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    },
+                    "innNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    }
+                  }
+                }
+              },
+              "componentList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:Component",
+                  "properties": {
+                    "recommendedName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:RecommendedName"
+                    },
+                    "allergenName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    },
+                    "biotechName": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    },
+                    "alternativeNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:AlternativeName"
+                      }
+                    },
+                    "submittedNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinType:SubmittedName"
+                      }
+                    },
+                    "cdAntigenNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    },
+                    "innNameList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "organism": {
+            "type": "object",
+            "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:OrganismType",
+            "properties": {
+              "lineage": {
+                "type": "object",
+                "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:OrganismType:Lineage",
+                "properties": {
+                  "taxonList": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "nameList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:OrganismNameType",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "dbReferenceList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:DbReferenceType",
+                  "properties": {
+                    "molecule": {
+                      "type": "object",
+                      "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:MoleculeType",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "propertyList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:PropertyType",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "evidenceList": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              },
+              "evidenceList": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "proteinExistence": {
+            "type": "object",
+            "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ProteinExistenceType",
+            "properties": {
+              "type": {
+                "type": "string"
+              }
+            }
+          },
+          "sequence": {
+            "type": "object",
+            "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:SequenceType",
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "length": {
+                "type": "integer"
+              },
+              "mass": {
+                "type": "integer"
+              },
+              "checksum": {
+                "type": "string"
+              },
+              "modified": {
+                "type": "integer",
+                "format": "utc-millisec"
+              },
+              "version": {
+                "type": "integer"
+              },
+              "fragment": {
+                "type": "string"
+              },
+              "precursor": {
+                "type": "boolean"
+              }
+            }
+          },
+          "dataset": {
+            "type": "string"
+          },
+          "created": {
+            "type": "integer",
+            "format": "utc-millisec"
+          },
+          "modified": {
+            "type": "integer",
+            "format": "utc-millisec"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "accessionList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nameList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "geneList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:GeneType",
+              "properties": {
+                "nameList": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:GeneNameType",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "evidenceList": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "organismHostList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:OrganismType"
+            }
+          },
+          "geneLocationList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:GeneLocationType",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "nameList": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:StatusType",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "evidenceList": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "referenceList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ReferenceType",
+              "properties": {
+                "citation": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CitationType",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "editorList": {
+                      "type": "object",
+                      "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:NameListType",
+                      "properties": {
+                        "consortiumOrPersonList": {
+                          "type": "array"
+                        }
+                      }
+                    },
+                    "authorList": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:NameListType"
+                    },
+                    "locator": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "date": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "volume": {
+                      "type": "string"
+                    },
+                    "first": {
+                      "type": "string"
+                    },
+                    "last": {
+                      "type": "string"
+                    },
+                    "publisher": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "db": {
+                      "type": "string"
+                    },
+                    "number": {
+                      "type": "string"
+                    },
+                    "institute": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "source": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:SourceDataType",
+                  "properties": {
+                    "strainOrPlasmidOrTransposonList": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "key": {
+                  "type": "string"
+                },
+                "scopeList": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "evidenceList": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "commentList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType",
+              "properties": {
+                "molecule": {
+                  "type": "object",
+                  "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:MoleculeType"
+                },
+                "absorption": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:Absorption",
+                  "properties": {
+                    "max": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                    }
+                  }
+                },
+                "kinetics": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:Kinetics",
+                  "properties": {
+                    "km": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidencedStringType"
+                      }
+                    }
+                  }
+                },
+                "phDependence": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:PhDependence"
+                },
+                "redoxPotential": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:RedoxPotential"
+                },
+                "temperatureDependence": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:TemperatureDependence"
+                },
+                "reaction": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ReactionType",
+                  "properties": {
+                    "text": {
+                      "type": "string"
+                    },
+                    "dbReferenceList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:DbReferenceType"
+                      }
+                    },
+                    "evidenceList": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "conflict": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:Conflict",
+                  "properties": {
+                    "sequence": {
+                      "type": "object",
+                      "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:Conflict:Sequence",
+                      "properties": {
+                        "resource": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "ref": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "organismsDiffer": {
+                  "type": "boolean"
+                },
+                "experiments": {
+                  "type": "integer"
+                },
+                "disease": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:CommentType:Disease",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "acronym": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "dbReference": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:DbReferenceType"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string"
+                },
+                "locationType": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "mass": {
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                },
+                "method": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "dbReferenceList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:DbReferenceType"
+            }
+          },
+          "keywordList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:KeywordType",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "evidenceList": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "featureList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:FeatureType",
+              "properties": {
+                "original": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:LocationType",
+                  "properties": {
+                    "begin": {
+                      "type": "object",
+                      "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:PositionType",
+                      "properties": {
+                        "position": {
+                          "type": "integer"
+                        },
+                        "evidenceList": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "end": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:PositionType"
+                    },
+                    "position": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:PositionType"
+                    },
+                    "sequence": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "ref": {
+                  "type": "string"
+                },
+                "variationList": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "evidenceList": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "evidenceList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:EvidenceType",
+              "properties": {
+                "source": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:SourceType",
+                  "properties": {
+                    "dbReference": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:DbReferenceType"
+                    },
+                    "ref": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "importedFrom": {
+                  "type": "object",
+                  "id": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:ImportedFromType",
+                  "properties": {
+                    "dbReference": {
+                      "type": "object",
+                      "$ref": "urn:jsonschema:org:biodatagraphdb:alsdb:model:uniprot:DbReferenceType"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

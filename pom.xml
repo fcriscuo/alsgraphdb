@@ -11,7 +11,7 @@
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <bundle.symbolicName.prefix>edu.jhu.fcriscu1</bundle.symbolicName.prefix>
+    <bundle.symbolicName.prefix>org.biographdb</bundle.symbolicName.prefix>
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
     <apache.commons.lang3.version>3.9</apache.commons.lang3.version>
@@ -20,10 +20,10 @@
     <apache.csv.version>1.7</apache.csv.version>
     <guava.version>29.0-jre</guava.version>
     <eclipse.collections.version>10.3.0</eclipse.collections.version>
-    <neo4j.version>4.1.0</neo4j.version>
+        <neo4j.version>4.1.1</neo4j.version>
     <neo4j.ogm.version>3.2.14</neo4j.ogm.version>
     <cfg4j.version>4.4.0</cfg4j.version>
-    <kotlin.version>1.4-M1</kotlin.version>
+        <kotlin.version>1.4.0-rc</kotlin.version>
     <mockk.version>1.9.3</mockk.version>
     <arrow-kt.version>0.10.5</arrow-kt.version>
     <ktor.version>1.3.2</ktor.version>
@@ -31,10 +31,14 @@
 </properties>
     <repositories>
         <repository>
+            <id>mavencentral</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com</url>
         </repository>
-        <repository>
+        <!--<repository>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -44,7 +48,7 @@
             <id>bintray.kotlin.eap</id>
             <name>Bintray Kotlin EAP Repository</name>
             <url>https://dl.bintray.com/kotlin/kotlin-eap</url>
-        </repository>
+        </repository>-->
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -149,10 +153,26 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>
         </dependency>
+        <!-- KOTLIN dependencies -->
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-maven-plugin -->
         <dependency>
-            <groupId>io.github.microutils</groupId>
-            <artifactId>kotlin-logging</artifactId>
-            <version>1.7.8</version>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-plugin</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -171,6 +191,12 @@
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.microutils</groupId>
+            <artifactId>kotlin-logging</artifactId>
+            <version>1.7.8</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.arrow-kt/arrow-core -->
@@ -224,11 +250,6 @@
             <version>${apache.csv.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
 
     </dependencies>
     <build>
