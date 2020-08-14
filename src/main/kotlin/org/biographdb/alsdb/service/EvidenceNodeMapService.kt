@@ -8,7 +8,7 @@ Represents a Map of Evidence objects for a specific UniProt entry
 Supports the establishment of a relationship between an Evidence node and
 client nodes (e.g. AlternativeName) that are supported by that evidence
 The map must be cleared for each unique UniProt entry processed
-This allows multiple UniProt entries to access a single Evidence node
+This allows multiple client nodes within a UniProt entry to access the same Evidence node
  */
 object EvidenceNodeMapService {
 
@@ -42,19 +42,5 @@ object EvidenceNodeMapService {
         }
         return evidenceMap.size
     }
-
-
-    /*
-     val altNameEvidenceList = altName.fullName?.getEvidenceList()
-            if (!altNameEvidenceList.isNullOrEmpty()) {
-                alternativeName.evidenceList = EvidenceList()
-                altNameEvidenceList?.forEach { id ->
-                        EvidenceNodeMapService.getEvidence(id)?.let {
-                            alternativeName.evidenceList.evidence.add(it)
-                        }
-                    }
-
-     */
-
 
 }

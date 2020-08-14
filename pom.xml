@@ -38,6 +38,11 @@
             <id>jcenter</id>
             <url>https://jcenter.bintray.com</url>
         </repository>
+        <repository>
+            <id>ebi-repo</id>
+            <name>ebi-repo</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
+        </repository>
         <!--<repository>
             <releases>
                 <enabled>true</enabled>
@@ -65,6 +70,12 @@
     </pluginRepositories>
 
     <dependencies>
+        <!-- UniProt API dependency -->
+        <dependency>
+            <groupId>uk.ac.ebi.uniprot</groupId>
+            <artifactId>japi</artifactId>
+            <version>1.0.34</version>
+        </dependency>
         <!-- Neo4j dependencies -->
         <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-graph-algo -->
         <dependency>

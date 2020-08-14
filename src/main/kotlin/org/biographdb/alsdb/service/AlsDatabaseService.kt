@@ -5,6 +5,9 @@ import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 
 /**
+ * Responsible for establishing a connection to the local Neo4j database
+ * and managing database sessions
+ * Neo4j user and password are extected to be supplied from environment variables
  * Created by fcriscuo on 7/11/20.
  */
 object AlsDatabaseService {
