@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020. BioGraphDb
+ * All rights reserved
+ */
+
 package org.biographdb.alsdb.service
 
 import org.neo4j.driver.*
@@ -12,9 +17,8 @@ import java.util.logging.Level
  */
 object AlsDatabaseService {
 
-
-    private val neo4jUser = System.getenv("NEO4J_USER") ?: "neo4j"
-    private val neo4jPassword = System.getenv("NEO4J_PASSWORD") ?: "neo4j"
+    private val neo4j_user = Preferences.neo4j_user
+    private val neo4j_password = Preferences.neo4j_password
     val neo4jUri = "bolt://localhost:7687"
     private val config = Config.builder()
         .withMaxConnectionLifetime(30, TimeUnit.MINUTES)
@@ -23,7 +27,7 @@ object AlsDatabaseService {
         .withConnectionLivenessCheckTimeout(5, TimeUnit.MINUTES)
         .withLogging(Logging.console(Level.INFO))
         .build()
-    private val driver = GraphDatabase.driver(neo4jUri, AuthTokens.basic(neo4jUser, neo4jPassword), config)
+    private val driver = GraphDatabase.driver(neo4jUri, AuthTokens.basic(neo4j_user, neo4j_password), config)
 
     fun getSession() = driver.session()
 

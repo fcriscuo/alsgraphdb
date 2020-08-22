@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020. BioGraphDb
+ * All rights reserved
+ */
+
 package org.biographdb.alsdb.model.literature
 
 import org.biographdb.alsdb.model.AlsdbModel

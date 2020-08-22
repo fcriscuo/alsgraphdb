@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020. BioGraphDb
+ * All rights reserved
+ */
+
 package org.biographdb.alsdb.service
 
 import org.biographdb.alsdb.domain.Evidence
@@ -21,7 +26,7 @@ object EvidenceNodeMapService {
         return evidenceMap.putIfAbsent(evidence.key, evidence)
     }
 
-    fun getEvidence(key: Int): Evidence = evidenceMap.getOrDefault(key, Evidence(0, ""))
+    fun getEvidence(key: Int): Evidence = evidenceMap.getOrDefault(key, Evidence("",0, ""))
 
     fun containsEvidence(key: Int): Boolean = evidenceMap.contains(key)
 
@@ -37,8 +42,9 @@ object EvidenceNodeMapService {
 
     fun constructEvidenceMap(entry: Entry): Int {
         evidenceMap.clear()
+        val uniprotId = entry?.getAccessionList()?.get(0) ?: ""
         entry.getEvidenceList()?.forEach { evidenceType ->
-            saveEvidence(Evidence.createEvidenceObject(evidenceType))
+            saveEvidence(Evidence.createEvidenceObject(evidenceType, uniprotId))
         }
         return evidenceMap.size
     }

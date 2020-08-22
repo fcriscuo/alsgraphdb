@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) 2020. BioGraphDb
+ * All rights reserved
+ */
+
 package org.biographdb.alsdb.domain
 
-import arrow.core.orNull
 import org.biographdb.alsdb.model.uniprot.Entry
 import org.biographdb.alsdb.model.uniprot.GeneNameType
 import org.neo4j.ogm.annotation.Id
@@ -30,7 +34,7 @@ class GeneNameList(@Id val uniprotId: String) {
     }
 }
 
-data class GeneName(val geneName: String, val nameType: String) : EvidenceSupport() {
+data class GeneName(val geneName: String, val nameType: String) : EvidenceSupported() {
     @Id
     val uuid = UUID.randomUUID().toString()
 
@@ -41,7 +45,7 @@ data class GeneName(val geneName: String, val nameType: String) : EvidenceSuppor
             val name = gnt.value ?: ""
             val type = gnt.type ?: ""
             val geneName = GeneName(name, type)
-            val evidenceBuildResult = EvidenceList.buildEvidenceList(gnt.getEvidenceList())
+            val evidenceBuildResult = EvidenceList.buildFromIds(gnt.getEvidenceList())
             if (evidenceBuildResult.isRight()) {
                 geneName.evidenceList = evidenceBuildResult.orNull()!!
             }

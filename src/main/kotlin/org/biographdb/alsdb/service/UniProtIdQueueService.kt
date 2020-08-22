@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020. BioGraphDb
+ * All rights reserved
+ */
+
 package org.biographdb.alsdb.service
 
 import arrow.core.Either
@@ -16,7 +21,6 @@ data is retrieved for disease-related proteins.
 object UniProtIdQueueService {
     // working queue
     val uniProtIdQueue = java.util.ArrayDeque<String>()
-
     var diseaseSpecificIdSet: MutableSet<String> = mutableSetOf<String>()
     var processedSet: MutableSet<String> = mutableSetOf()
 

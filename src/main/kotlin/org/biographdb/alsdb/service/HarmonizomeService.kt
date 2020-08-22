@@ -3,55 +3,52 @@
  * All rights reserved
  */
 
-package org.biographdb.pocapp
+package org.biographdb.alsdb.service
 
 import com.google.gson.Gson
-import org.biographdb.alsdb.model.harmonizome.Association
-import org.biographdb.alsdb.model.harmonizome.GeneDiseaseAssociations
-import org.biographdb.alsdb.model.harmonizome.HarmonizomeGene
-import org.biographdb.alsdb.model.harmonizome.HarmonizomeProtein
+import org.biographdb.alsdb.model.harmonizome.*
 import org.biographdb.alsdb.model.uniprot.Entry
 import org.biographdb.alsdb.model.uniprot.Uniprot
 import java.net.URL
 import java.util.stream.Collectors
 import javax.xml.bind.JAXBContext
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
-/**
- * Created by fcriscuo on 4/2/20.
+
+/*
+Represents a collection of functions to interact with the Harmonizome Web service
  */
+
 const val harmonizomeBaseUrl = "http://amp.pharm.mssm.edu/Harmonizome"
+const val harmonizomeUrlDiseaseTemplate = harmonizomeBaseUrl +
+    "/api/1.0/gene_set/DISEASE_NAME/DISEASES+Text-mining+Gene-Disease+Assocation+Evidence+Scores"
 const val harmonizomeAlsGenesUrl = harmonizomeBaseUrl +
         "/api/1.0/gene_set/amyotrophic+lateral+sclerosis/DISEASES+Text-mining+Gene-Disease+Assocation+Evidence+Scores"
 const val uniprotUrlTemplate = "https://www.uniprot.org:443/uniprot/UNIPROTID.xml?include=yes"
 const val uniprotStartTag = "<uniprot"
 val gson = Gson()
-fun main() {
-    val entryLimit = 30L
-    fetchDiseasAssociatedUniProtEntries(entryLimit)
-        ?.forEach { entry ->
-            run {
-                println("name: ${entry?.getNameList()} db reference count = ${entry?.getDbReferenceList()?.size}")
-                entry?.getDbReferenceList()?.forEach { ref ->
-                    run {
-                        println("ref id ${ref.id}  type: ${ref.type}  properties: ${ref.getPropertyList()?.size}")
-                        ref.getPropertyList()?.stream()?.filter { it -> it.type.equals("term") }
-                            ?.forEach { println("term:  ${it.value}") }
-                    }
-                }
-            }
-        }
-}
 
-fun fetchDiseasAssociatedUniProtEntries(entryLimit: Long): MutableList<Entry?>? =
+fun generateHarmonizomeUrlForDisease(diseaseName: String): String =
+    harmonizomeUrlDiseaseTemplate.replace("DISEASE_NAME", diseaseName)
+
+fun fetchHarmonizomeGenesByDiseaseAssociation(diseaseUrl: String = harmonizomeAlsGenesUrl): MutableList<HarmonizomeGene> =
+    fetchHarmonizomeDiseaseGeneAssoctions(diseaseUrl).stream()
+        .map { assoc -> fetchHarmonizomeGene(assoc) }
+        .filter { gene -> gene.proteins.isNotEmpty() }
+        .collect(Collectors.toList())
+
+fun fetchDiseasAssociatedUniProtEntries(entryLimit: Long = Long.MAX_VALUE): MutableList<Entry?>? =
     fetchHarmonizomeDiseaseGeneAssoctions(harmonizomeAlsGenesUrl).stream()
         .limit(entryLimit)
         .map { assoc -> fetchHarmonizomeGene(assoc) }
         .filter { gene -> gene.proteins.isNotEmpty() }
         .map { gene -> fetchHarmonizomeProteins(gene) }
         .flatMap { protein ->
-            fetchUniProtEntryList(protein).stream()
-        }
+            fetchUniProtEntryList(protein).stream()}
         .collect(Collectors.toList())
+
 
 fun fetchHarmonizomeDiseaseGeneAssoctions(harmonizomeUrl: String): List<Association> {
     val json = URL(harmonizomeUrl).readText()
@@ -59,6 +56,7 @@ fun fetchHarmonizomeDiseaseGeneAssoctions(harmonizomeUrl: String): List<Associat
     println("ALS gene association count = ${alsGeneAssociation.associations.size}")
     return alsGeneAssociation.associations
 }
+
 
 fun fetchUniProtEntryList(proteinList: List<HarmonizomeProtein>): List<Entry?> {
     val tmpList = arrayListOf<Entry?>()
@@ -84,16 +82,31 @@ fun fetchHarmonizomeGene(association: Association): HarmonizomeGene {
     return gson.fromJson(json, HarmonizomeGene::class.java)
 }
 
-fun fetchHarmonizomeProteins(gene: HarmonizomeGene): List<HarmonizomeProtein> {
-    val tmpList = arrayListOf<HarmonizomeProtein>()
+/*
+Return a List of HarmonizomeProtein instances associated with a
+specified HarmonizomeGene. Ususally only 1 protein is associated with a gene
+ */
+fun fetchHarmonizomeProteins(gene: HarmonizomeGene): List<HarmonizomeProtein> =
     gene.proteins.stream()
         .map { protein -> harmonizomeBaseUrl + protein.href }
         .map { url -> URL(url).readText() }
         .map { json -> gson.fromJson(json, HarmonizomeProtein::class.java) }
-        .forEach { t: HarmonizomeProtein -> tmpList.add(t) }
-    return tmpList.toList()
-
-}
+        .collect(Collectors.toList())
 
 private fun skipUniprotXmlHeader(xml: String): String =
     xml.substring(xml.indexOf(uniprotStartTag))
+
+
+
+@ExperimentalTime
+fun main() {
+    // test fetching uniprot proteins associated with ALS
+    val elapsed: Duration = measureTime {
+        fetchHarmonizomeGenesByDiseaseAssociation()
+            .stream()
+            .map { hg -> HarmonizomeGeneProteinGroup.buildHarmonizomeGeneProteinGroup(hg) }
+            .forEach { group -> println(group.toString()) }
+    }
+    println("Elapsed time in seconds = ${elapsed.inSeconds}")
+
+}
