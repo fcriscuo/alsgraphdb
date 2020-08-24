@@ -662,7 +662,7 @@ class ProteinType {
          * allowed object is
          * [ProteinType.RecommendedName]
          */
-        var recommendedName: RecommendedName? = null
+        var recommendedName: RecommendedName = RecommendedName()
         protected var alternativeName: List<AlternativeName>? = null
         protected var submittedName: List<SubmittedName>? = null
         /**

@@ -10,6 +10,7 @@ import org.biographdb.alsdb.model.uniprot.ProteinType
 import org.neo4j.ogm.annotation.Id
 import org.neo4j.ogm.annotation.NodeEntity
 import org.neo4j.ogm.annotation.Relationship
+import kotlin.contracts.ExperimentalContracts
 
 /*
 Represents a collection of alternative names for a protein
@@ -22,6 +23,7 @@ class AlternativeNameList(@Id val uniprotId: String) {
     var alternateNames: MutableList<AlternativeName> = mutableListOf()
 
     companion object {
+        @ExperimentalContracts
         fun resolveAlternativeNameListFromEntry(entry: Entry): AlternativeNameList {
             var uniprotId = entry?.getAccessionList()?.get(0) ?: ""
             var altNameList = AlternativeNameList(uniprotId)
@@ -33,26 +35,4 @@ class AlternativeNameList(@Id val uniprotId: String) {
     }
 }
 
-/*
-Represents an alternative name for an entity
-An AlternativeName may have a relationship to >= Evidence nodes
-An individual AlternativeName node my be referenced by multiple nodes (i.e. many to one)
- */
-@NodeEntity(label = "AlternativeName")
-data class AlternativeName(@Id val fullName: String, val shortName: String = "") : EvidenceSupported() {
 
-    fun isValid(): Boolean = fullName.isNotEmpty()
-
-    companion object {
-        fun buildFromAlternativeNameType(altName: ProteinType.AlternativeName): AlternativeName {
-            val fullName: String = altName.fullName?.value ?: ""
-            var shortName = ""
-            if (!altName.getShortNameList().isNullOrEmpty())
-                shortName = altName.getShortNameList()?.get(0)?.value ?: ""
-            val alternativeName = AlternativeName(fullName, shortName)
-            alternativeName.evidenceList = EvidenceList.buildFromIds(altName.fullName?.getEvidenceList())
-            return alternativeName
-        }
-    }
-
-}

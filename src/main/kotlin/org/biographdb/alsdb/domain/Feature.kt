@@ -19,6 +19,6 @@ class Feature {
     val uuid = UUID.randomUUID().toString()
 
     @Relationship(type = "HAS_EVIDENCE_LIST")
-    lateinit var evidenceList: EvidenceList
+    lateinit var evidenceList: EvidenceSupportedValue
 
 }

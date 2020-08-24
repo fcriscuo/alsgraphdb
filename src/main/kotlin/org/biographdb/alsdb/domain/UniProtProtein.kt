@@ -10,7 +10,7 @@ import org.biographdb.alsdb.model.uniprot.Entry
 import org.neo4j.ogm.annotation.Id
 import org.neo4j.ogm.annotation.NodeEntity
 import org.neo4j.ogm.annotation.Relationship
-
+import kotlin.contracts.ExperimentalContracts
 
 
 @NodeEntity(label = "UniProtProtein")
@@ -58,6 +58,8 @@ class UniProtProtein(@Id val uniprotId: String) {
        return sb.toString()
     }
 
+    @ExperimentalContracts
+    @ExperimentalStdlibApi
     fun completeUniProtProteinObject(entry: Entry) {
             sequence = entry?.sequence?.value ?: ""
             mass = entry?.sequence?.mass ?: 0
@@ -68,7 +70,6 @@ class UniProtProtein(@Id val uniprotId: String) {
             componentList = ComponentList.resolveComponentListFromEntry(entry)
             geneNameList = GeneNameList.resolveGeneNameListFromEntry(entry)
             citationList = CitationList.resolveCitationListFromEntry(entry)
-
     }
 
     companion object {

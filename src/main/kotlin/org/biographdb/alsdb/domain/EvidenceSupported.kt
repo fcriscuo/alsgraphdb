@@ -5,11 +5,15 @@
 
 package org.biographdb.alsdb.domain
 
+import org.neo4j.ogm.annotation.Id
 import org.neo4j.ogm.annotation.Relationship
+import java.util.*
 
- open class EvidenceSupported {
+open class EvidenceSupported {
+     @Id
+     val uuid = UUID.randomUUID().toString()
     @Relationship(type = "HAS_EVIDENCE_LIST")
-    lateinit var evidenceList: EvidenceList
+    lateinit var evidenceList: EvidenceSupportedValue
 
 
 

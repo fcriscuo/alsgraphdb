@@ -9,6 +9,7 @@ import org.biographdb.alsdb.model.AlsdbModel
 import org.biographdb.alsdb.model.uniprot.EvidencedStringType
 import org.biographdb.alsdb.service.EvidenceNodeMapService
 import org.neo4j.ogm.annotation.Id
+import org.neo4j.ogm.annotation.Labels
 import org.neo4j.ogm.annotation.NodeEntity
 import org.neo4j.ogm.annotation.Relationship
 import java.util.*
@@ -20,12 +21,21 @@ Represents an attribute whose value is supported by one or more Evidence nodes
 Roughly equivalent to the JAXB generated EvidencedStringType
  */
 @NodeEntity(label = "EvidenceList")
-class EvidenceList(val text: String = "") {
+class EvidenceSupportedValue(val text: String = "") {
     @Id
     val uuid = UUID.randomUUID().toString()
 
     @Relationship(type = "HAS_EVIDENCE")
     var evidence: MutableList<Evidence> = mutableListOf()
+
+    @Labels
+    private val labels: MutableList<String> = mutableListOf()
+
+    fun addLabel( label: String) {
+        if (!labels.contains(label)) {
+            labels.add(label)
+        }
+    }
 
     companion object : AlsdbModel {
         /*
@@ -43,28 +53,27 @@ class EvidenceList(val text: String = "") {
         }
 
         /*
-        Builds an EvidenceList object
+        Builds an EvidenceSupportedValue object
          */
         @ExperimentalContracts
         fun buildFromEvidenceStringType(est: EvidencedStringType):
-                 EvidenceList {
+                 EvidenceSupportedValue {
             est.assertValid()
-            val evidenceList = EvidenceList(est.value ?: "")
+            val evidenceList = EvidenceSupportedValue(est.value ?: "")
             evidenceList.evidence.addAll(resolveEvidenceListFromEvidenceIdentifiers(est.getEvidenceList()))
             return evidenceList
         }
 
         /*
-  Function returns an EvidenceList object or a no evidence message
-  encapsulated in an Either container
-  Input is a List of evidence ids that may be empty or null
+  Function returns an EvidenceList from thw EvidenceList cache based on a
+  supplied id
    */
 
-        fun buildFromIds(evidenceIdList: List<Int>?): EvidenceList {
+        fun buildFromIds(evidenceIdList: List<Int>?): EvidenceSupportedValue {
             if (evidenceIdList.isNullOrEmpty()) {
-                EvidenceList()
+                EvidenceSupportedValue()
             }
-            val evidenceList = EvidenceList()
+            val evidenceList = EvidenceSupportedValue()
             evidenceIdList?.stream()
                     ?.filter { id -> EvidenceNodeMapService.containsEvidence(id) }
                     ?.forEach { id -> evidenceList.evidence.add(EvidenceNodeMapService.getEvidence(id)) }

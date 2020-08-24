@@ -15,6 +15,7 @@ import org.neo4j.ogm.annotation.NodeEntity
 import org.neo4j.ogm.annotation.Relationship
 import java.util.*
 import java.util.stream.Collectors
+import kotlin.contracts.ExperimentalContracts
 
 @NodeEntity(label="CommentList")
 class CommentList (@Id val uniprotId: String) {
@@ -22,7 +23,8 @@ class CommentList (@Id val uniprotId: String) {
     var comments:MutableList<Comment> = mutableListOf()
 
     companion object{
-        fun resolveCommentListFromEntry( entry: Entry): CommentList {
+        @ExperimentalContracts
+        fun resolveCommentListFromEntry(entry: Entry): CommentList {
             val uniprotId = entry?.getAccessionList()?.get(0) ?: ""
             val commentList = CommentList(uniprotId)
             entry.getCommentList()?.forEach { commentType ->
@@ -55,11 +57,12 @@ abstract class Comment (): EvidenceSupported() {
 
     companion object{
         // process the list of EvidenceStringTypes but only use the first one
-        fun resolveEvidenceListFromCommentType( commentType: CommentType): EvidenceList =
+        @ExperimentalContracts
+        fun resolveEvidenceListFromCommentType(commentType: CommentType): EvidenceSupportedValue =
                 commentType.text?.stream()
                         ?.filter{ est -> est.getEvidenceList().isNotEmpty()}
-                        ?.map{ est -> EvidenceList.buildFromEvidenceStringType(est)}
-                        ?.collect(Collectors.toList())?.get(0) ?: EvidenceList()
+                        ?.map{ est -> EvidenceSupportedValue.buildFromEvidenceStringType(est)}
+                        ?.collect(Collectors.toList())?.get(0) ?: EvidenceSupportedValue()
 
         fun resolvePrimaryTextFromCommentType( commentType: CommentType): String =
             commentType.text?.stream()
@@ -74,7 +77,8 @@ class SubCellularLocationComment(): Comment() {
     var subCellulatLocations: MutableList<SubCellularLocation> = mutableListOf()
 
     companion object {
-        fun resolveSubCellularLocationCommentFromCommentType( commentType: CommentType): SubCellularLocationComment{
+        @ExperimentalContracts
+        fun resolveSubCellularLocationCommentFromCommentType(commentType: CommentType): SubCellularLocationComment{
             val subCellularLocationComment = SubCellularLocationComment()
             subCellularLocationComment.labels.add("SubCellularLocationComment")
             subCellularLocationComment.text = Comment.resolvePrimaryTextFromCommentType(commentType)
@@ -119,7 +123,7 @@ class Location (val value: String): EvidenceSupported() {
     companion object{
         fun resolveLocationFromEvidenceStringType( evidencedStringType: EvidencedStringType): Location {
             val location = Location(evidencedStringType.value ?: "")
-            location.evidenceList = EvidenceList.buildFromIds(evidencedStringType.getEvidenceList())
+            location.evidenceList = EvidenceSupportedValue.buildFromIds(evidencedStringType.getEvidenceList())
             return location
         }
     }
@@ -132,7 +136,7 @@ class Topology (val value: String): EvidenceSupported() {
     companion object{
         fun resolveTopologyFromEvidenceStringType( evidencedStringType: EvidencedStringType): Topology {
             val topology = Topology(evidencedStringType.value?:"")
-            topology.evidenceList = EvidenceList.buildFromIds(evidencedStringType.getEvidenceList())
+            topology.evidenceList = EvidenceSupportedValue.buildFromIds(evidencedStringType.getEvidenceList())
             return topology
         }
     }
@@ -166,6 +170,7 @@ class InteractionComment( val interactId1: String, val id1: String, val label1: 
 class DiseaseComment (val diseaseId: String, val diseaseName: String, val acronym: String ="",
                       val description: String ="" ):Comment() {
     companion object {
+        @ExperimentalContracts
         fun createDiseaseCommentFromDiseaseType(commentType: CommentType): Comment{
             val diseaseType = commentType.disease
             val diseaseId = diseaseType?.id ?: ""
