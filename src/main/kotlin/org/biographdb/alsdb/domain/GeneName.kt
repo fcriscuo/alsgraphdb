@@ -47,7 +47,7 @@ data class GeneName(val geneName: String, val nameType: String) : EvidenceSuppor
             val geneName = GeneName(name, type)
             val evidenceBuildResult = EvidenceSupportedValue.buildFromIds(gnt.getEvidenceList())
             if (evidenceBuildResult.isRight()) {
-                geneName.evidenceList = evidenceBuildResult.orNull()!!
+                geneName.evidenceSupportedValue = evidenceBuildResult.orNull()!!
             }
             return geneName
 

@@ -19,8 +19,10 @@ import kotlin.contracts.contract
 /*
 Represents an attribute whose value is supported by one or more Evidence nodes
 Roughly equivalent to the JAXB generated EvidencedStringType
+It is expected that all EvidenceSupportedValue nodes will be
+assigned an additional, more definitive, label (e.g. Alternative Name")
  */
-@NodeEntity(label = "EvidenceList")
+@NodeEntity(label = "EvidenceSupportedValue")
 class EvidenceSupportedValue(val text: String = "") {
     @Id
     val uuid = UUID.randomUUID().toString()

@@ -12,8 +12,8 @@ import java.util.*
 open class EvidenceSupported {
      @Id
      val uuid = UUID.randomUUID().toString()
-    @Relationship(type = "HAS_EVIDENCE_LIST")
-    lateinit var evidenceList: EvidenceSupportedValue
+    @Relationship(type = "HAS_EVIDENCE_SUPPORTED_VALUE")
+    lateinit var evidenceSupportedValue: EvidenceSupportedValue
 
 
 

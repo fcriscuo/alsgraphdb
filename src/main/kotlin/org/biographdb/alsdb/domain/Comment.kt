@@ -14,7 +14,6 @@ import org.neo4j.ogm.annotation.Labels
 import org.neo4j.ogm.annotation.NodeEntity
 import org.neo4j.ogm.annotation.Relationship
 import java.util.*
-import java.util.stream.Collectors
 import kotlin.contracts.ExperimentalContracts
 
 @NodeEntity(label="CommentList")
@@ -25,16 +24,16 @@ class CommentList (@Id val uniprotId: String) {
     companion object{
         @ExperimentalContracts
         fun resolveCommentListFromEntry(entry: Entry): CommentList {
-            val uniprotId = entry?.getAccessionList()?.get(0) ?: ""
+            val uniprotId = entry.getAccessionList()?.get(0) ?: ""
             val commentList = CommentList(uniprotId)
             entry.getCommentList()?.forEach { commentType ->
                 run {
                     when (commentType.type) {
-                        "disease" -> commentList.comments.add(DiseaseComment.createDiseaseCommentFromDiseaseType(commentType))
+                        "disease" -> commentList.comments.add(DiseaseComment.buildFromDiseaseType(commentType))
                         "interaction" -> commentList.comments
-                                .add(InteractionComment.createInteractionCommentFromInteractionType(commentType))
+                                .add(InteractionComment.buildFromInteractionType(commentType))
                         "subcellular location" -> commentList.comments
-                                .add(SubCellularLocationComment.resolveSubCellularLocationCommentFromCommentType(commentType))
+                                .add(SubCellularLocationComment.buildFromCommentType(commentType))
                         else -> println("Comment Type: ${commentType.type} is not supported")
                     }
                 }
@@ -45,59 +44,64 @@ class CommentList (@Id val uniprotId: String) {
 }
 
 @NodeEntity(label = "Comment")
-abstract class Comment (): EvidenceSupported() {
+abstract class Comment : EvidenceSupported() {
     @Labels
     val labels: MutableList<String> = ArrayList()
-    @Id
-    val uuid = UUID.randomUUID().toString()
-    var commentType: String = ""
     var molecule: String = ""
-    var text: String = ""
-
+    @Relationship(type="HAS_TEXT")
+    var texts:MutableList<EvidenceSupportedValue> = mutableListOf()
+    @Relationship (type="HAS_EVIDENCE_COLLECTION")
+    lateinit var evidenceCollection: EvidenceCollection
 
     companion object{
-        // process the list of EvidenceStringTypes but only use the first one
         @ExperimentalContracts
-        fun resolveEvidenceListFromCommentType(commentType: CommentType): EvidenceSupportedValue =
-                commentType.text?.stream()
+        fun initializeCommonAttributes(comment: Comment, commentType: CommentType) {
+            resolveEvidenceSupportedValuesFromCommentType(comment, commentType)
+            resolveEvidenceCollection (comment, commentType)
+            comment.molecule = commentType.molecule?.value ?: ""
+        }
+
+        @ExperimentalContracts
+        fun resolveEvidenceSupportedValuesFromCommentType(comment: Comment, commentType: CommentType)
+                = commentType.text?.stream()
                         ?.filter{ est -> est.getEvidenceList().isNotEmpty()}
                         ?.map{ est -> EvidenceSupportedValue.buildFromEvidenceStringType(est)}
-                        ?.collect(Collectors.toList())?.get(0) ?: EvidenceSupportedValue()
+                        ?.forEach { esv -> run {
+                            esv.addLabel("TEXT")
+                            comment.texts.add(esv)
+                        } }
 
-        fun resolvePrimaryTextFromCommentType( commentType: CommentType): String =
-            commentType.text?.stream()
-                    ?.filter { est -> !est.value.isNullOrEmpty()}
-                    ?.map{ est -> est.value}
-                    ?.collect(Collectors.toList())?.get(0) ?: ""
+         fun resolveEvidenceCollection (comment: Comment, commentType: CommentType) {
+             if(commentType.evidence.isNotEmpty()){
+                 comment.evidenceCollection = EvidenceCollection.buildFromEvidenceIdList(commentType.evidence)
+             }
+         }
     }
 }
 @NodeEntity (label = "SubCellularLocationComment")
-class SubCellularLocationComment(): Comment() {
-    @Relationship(type="HAS_SUBCELLULAR_LCATION")
-    var subCellulatLocations: MutableList<SubCellularLocation> = mutableListOf()
+class SubCellularLocationComment : Comment() {
+    @Relationship(type="HAS_SUBCELLULAR_LOCATION")
+    var subCellularLocations: MutableList<SubCellularLocation> = mutableListOf()
 
     companion object {
         @ExperimentalContracts
-        fun resolveSubCellularLocationCommentFromCommentType(commentType: CommentType): SubCellularLocationComment{
+        fun buildFromCommentType(commentType: CommentType): SubCellularLocationComment{
             val subCellularLocationComment = SubCellularLocationComment()
+            Comment.initializeCommonAttributes(subCellularLocationComment, commentType)
             subCellularLocationComment.labels.add("SubCellularLocationComment")
-            subCellularLocationComment.text = Comment.resolvePrimaryTextFromCommentType(commentType)
-            subCellularLocationComment.evidenceList = Comment.resolveEvidenceListFromCommentType(commentType)
            commentType.subcellularLocation?.forEach { sclType ->
-                subCellularLocationComment.subCellulatLocations
+                subCellularLocationComment.subCellularLocations
                         .add(SubCellularLocation.resolveSubCellularLocationFromSubCellularLocationType(sclType))
             }
             return subCellularLocationComment
         }
     }
-
 }
 
 @NodeEntity(label = "SubCellularLocation")
-class SubCellularLocation (){
+class SubCellularLocation {
     @Id
     val uuid = UUID.randomUUID().toString()
-
     @Relationship(type = "HAS_LOCATION")
     var locations:MutableList<Location> = mutableListOf()
     @Relationship(type = "HAS_TOPOLOGY")
@@ -118,12 +122,11 @@ class SubCellularLocation (){
 
 @NodeEntity(label = "Location")
 class Location (val value: String): EvidenceSupported() {
-    @Id
-    val uuid = UUID.randomUUID().toString()
+
     companion object{
         fun resolveLocationFromEvidenceStringType( evidencedStringType: EvidencedStringType): Location {
             val location = Location(evidencedStringType.value ?: "")
-            location.evidenceList = EvidenceSupportedValue.buildFromIds(evidencedStringType.getEvidenceList())
+            location.evidenceSupportedValue = EvidenceSupportedValue.buildFromIds(evidencedStringType.getEvidenceList())
             return location
         }
     }
@@ -131,12 +134,11 @@ class Location (val value: String): EvidenceSupported() {
 
 @NodeEntity(label = "Topology")
 class Topology (val value: String): EvidenceSupported() {
-    @Id
-    val uuid = UUID.randomUUID().toString()
+
     companion object{
         fun resolveTopologyFromEvidenceStringType( evidencedStringType: EvidencedStringType): Topology {
             val topology = Topology(evidencedStringType.value?:"")
-            topology.evidenceList = EvidenceSupportedValue.buildFromIds(evidencedStringType.getEvidenceList())
+            topology.evidenceSupportedValue = EvidenceSupportedValue.buildFromIds(evidencedStringType.getEvidenceList())
             return topology
         }
     }
@@ -144,10 +146,10 @@ class Topology (val value: String): EvidenceSupported() {
 
 class InteractionComment( val interactId1: String, val id1: String, val label1: String ="" ,
                           val interactId2: String, val id2: String, val label2: String ="" )
-    :Comment() {
-
+    :Comment()
+     {
     companion object{
-        fun createInteractionCommentFromInteractionType( commentType: CommentType): InteractionComment {
+        fun buildFromInteractionType(commentType: CommentType): InteractionComment {
             val interactionType1 = commentType.interactant?.get(0)
             val interactionType2 = commentType.interactant?.get(1)
             val inter1 = interactionType1?.intactId ?: ""
@@ -158,20 +160,16 @@ class InteractionComment( val interactId1: String, val id1: String, val label1: 
             val label2 = interactionType2?.label ?: ""
             val interactionComment = InteractionComment(inter1, id1, label1, inter2, id2, label2)
             interactionComment.labels.add("Interaction")
-            // interactions don't have relationships to evidence nodes
-            //interactionComment.evidenceList = resolveEvidenceListFromCommentType(commentType)
             return interactionComment
         }
-
     }
-
 }
 
 class DiseaseComment (val diseaseId: String, val diseaseName: String, val acronym: String ="",
                       val description: String ="" ):Comment() {
     companion object {
         @ExperimentalContracts
-        fun createDiseaseCommentFromDiseaseType(commentType: CommentType): Comment{
+        fun buildFromDiseaseType(commentType: CommentType): Comment{
             val diseaseType = commentType.disease
             val diseaseId = diseaseType?.id ?: ""
             val diseaseName = diseaseType?.name ?: ""
@@ -179,10 +177,8 @@ class DiseaseComment (val diseaseId: String, val diseaseName: String, val acrony
             val description = diseaseType?.description ?: ""
             val disease = DiseaseComment(diseaseId, diseaseName,acronym, description )
             disease.labels.add("Disease")
-            disease.evidenceList = Comment.resolveEvidenceListFromCommentType(commentType)
+            Comment.initializeCommonAttributes(disease, commentType)
             return disease
         }
     }
-
-
 }

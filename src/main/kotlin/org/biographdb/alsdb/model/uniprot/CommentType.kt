@@ -459,7 +459,7 @@ class CommentType {
     var method: String? = null
 
     @XmlAttribute(name = "evidence")
-    protected var evidence: List<Int>? = null
+    var evidence: MutableList<Int> = mutableListOf()
 
     /**
      * Gets the value of the physiologicalReaction property.

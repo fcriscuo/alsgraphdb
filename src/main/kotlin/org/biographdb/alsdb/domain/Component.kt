@@ -58,7 +58,7 @@ class Component() : UniProtNameTypes() {
                         alternaltiveNames.add(AlternativeName.buildFromAlternativeNameType(an))
                     }
                 }
-                
+
 
             }
 

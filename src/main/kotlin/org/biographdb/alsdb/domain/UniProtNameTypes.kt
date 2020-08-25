@@ -19,6 +19,8 @@ const val alternativeNameLabel: String = "Alternative Name"
 const val fullNameLabel: String = "Full Name"
 const val shortNameLabel: String = "Short Name"
 const val ecNumberLabel: String = "EC Number"
+const val biotechNameLabel: String = "Biotech Name"
+const val allergenNameLabel: String = "Allergen Name"
 
 abstract class UniProtNameTypes() {
 
@@ -56,7 +58,6 @@ class AlternativeName() : EvidenceSupported() {
                                 run {
                                     el.addLabel(shortNameLabel)
                                     shortNames.add(el)
-
                                 }
                             }
                 }
@@ -147,7 +148,8 @@ class BiotechName() : EvidenceSupported() {
         fun buildFromEvidencedStringType(est: EvidencedStringType): BiotechName =
                 BiotechName().apply {
                     est.assertValid()
-                    evidenceList = EvidenceSupportedValue.buildFromEvidenceStringType(est)
+                    val evidenceSupportedValue = EvidenceSupportedValue.buildFromEvidenceStringType(est)
+                    evidenceSupportedValue.addLabel(biotechNameLabel)
                 }
     }
 }
@@ -159,7 +161,8 @@ class AllergenName() : EvidenceSupported() {
         fun buildFromEvidencedStringType(est: EvidencedStringType): AllergenName =
                 AllergenName().apply {
                     est.assertValid()
-                    evidenceList = EvidenceSupportedValue.buildFromEvidenceStringType(est)
+                    val evidenceSupportedValue = EvidenceSupportedValue.buildFromEvidenceStringType(est)
+                    evidenceSupportedValue.addLabel(allergenNameLabel)
                 }
     }
 }
