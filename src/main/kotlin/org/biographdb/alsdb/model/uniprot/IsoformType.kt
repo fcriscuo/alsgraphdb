@@ -70,7 +70,8 @@ import javax.xml.bind.annotation.*
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "isoformType", propOrder = ["id", "name", "sequence", "text"])
-class IsoformType {
+class
+IsoformType {
     @XmlElement(required = true)
     protected var id: List<String>? = null
 
