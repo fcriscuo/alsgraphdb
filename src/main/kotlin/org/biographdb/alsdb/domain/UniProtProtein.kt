@@ -52,6 +52,9 @@ class UniProtProtein(@Id val uniprotId: String) {
     @Relationship(type = "HAS_ISOFORM_LIST")
     lateinit var isoformList: IsoformList
 
+    @Relationship(type ="HAS_FEATURE_LIST")
+    lateinit var featureList: FeatureList
+
     fun completeGeneRelationship(relatedGene: Gene) {
         gene = relatedGene
     }
@@ -78,6 +81,7 @@ class UniProtProtein(@Id val uniprotId: String) {
         citationList = CitationList.resolveCitationListFromEntry(entry)
         commentList = CommentList.resolveCommentListFromEntry(entry)
         isoformList = IsoformList.buildFromUniProtEntry(entry)
+        featureList = FeatureList.buildFromEntry(entry)
     }
 
     companion object {

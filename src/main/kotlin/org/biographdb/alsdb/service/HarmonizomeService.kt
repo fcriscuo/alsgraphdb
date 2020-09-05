@@ -33,8 +33,8 @@ val gson = Gson()
 fun generateHarmonizomeUrlForDisease(diseaseName: String): String =
     harmonizomeUrlDiseaseTemplate.replace("DISEASE_NAME", diseaseName)
 
-fun fetchHarmonizomeGenesByDiseaseAssociation(diseaseUrl: String = harmonizomeAlsGenesUrl): MutableList<HarmonizomeGene> =
-    fetchHarmonizomeDiseaseGeneAssoctions(diseaseUrl).stream()
+fun fetchHarmonizomeGenesByDiseaseAssociation(diseaseName: String = "amyotrophic+lateral+sclerosis"): MutableList<HarmonizomeGene> =
+    fetchHarmonizomeDiseaseGeneAssoctions(generateHarmonizomeUrlForDisease(diseaseName)).stream()
         .map { assoc -> fetchHarmonizomeGene(assoc) }
         .filter { gene -> gene.proteins.isNotEmpty() }
         .collect(Collectors.toList())

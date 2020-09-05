@@ -75,11 +75,11 @@ class EvidenceSupportedValue(val text: String = "") {
             if (evidenceIdList.isNullOrEmpty()) {
                 EvidenceSupportedValue()
             }
-            val evidenceList = EvidenceSupportedValue()
+            val esv = EvidenceSupportedValue()
             evidenceIdList?.stream()
                     ?.filter { id -> EvidenceNodeMapService.containsEvidence(id) }
-                    ?.forEach { id -> evidenceList.evidence.add(EvidenceNodeMapService.getEvidence(id)) }
-            return evidenceList
+                    ?.forEach { id -> esv.evidence.add(EvidenceNodeMapService.getEvidence(id)) }
+            return esv
         }
 
 //        fun resolveEvidenceListFromEvidenceTypeList(evidenceTypeList: List<EvidencedStringType>?):

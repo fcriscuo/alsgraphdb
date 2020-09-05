@@ -64,8 +64,6 @@ class CommentList (@Id val uniprotId: String) {
     }
 }
 
-
-@NodeEntity(label = "Comment")
 abstract class Comment (): EvidenceSupported() {
     @Labels
     val labels: MutableList<String> = ArrayList()
@@ -196,14 +194,14 @@ class SubCellularLocation {
     @Id
     val uuid = UUID.randomUUID().toString()
     @Relationship(type = "HAS_LOCATION")
-    var locations:MutableList<Location> = mutableListOf()
+    var locationValues:MutableList<LocationValue> = mutableListOf()
     @Relationship(type = "HAS_TOPOLOGY")
     var topologies: MutableList<Topology> = mutableListOf()
      companion object{
          fun resolveSubCellularLocationFromSubCellularLocationType( scl: SubcellularLocationType): SubCellularLocation {
              val subCellularLocation = SubCellularLocation()
              scl.getLocationList()?.forEach {est ->
-                subCellularLocation.locations.add(Location.resolveLocationFromEvidenceStringType(est))
+                subCellularLocation.locationValues.add(LocationValue.resolveLocationFromEvidenceStringType(est))
              }
              scl.getTopologyList()?.forEach { est ->
                  subCellularLocation.topologies.add(Topology.resolveTopologyFromEvidenceStringType(est))
@@ -214,11 +212,11 @@ class SubCellularLocation {
 }
 
 @NodeEntity(label = "Location")
-class Location (val value: String): EvidenceSupported() {
+class LocationValue (val value: String): EvidenceSupported() {
 
     companion object{
-        fun resolveLocationFromEvidenceStringType( evidencedStringType: EvidencedStringType): Location {
-            val location = Location(evidencedStringType.value ?: "")
+        fun resolveLocationFromEvidenceStringType( evidencedStringType: EvidencedStringType): LocationValue {
+            val location = LocationValue(evidencedStringType.value ?: "")
             location.evidenceSupportedValue = EvidenceSupportedValue.buildFromIds(evidencedStringType.getEvidenceList())
             return location
         }

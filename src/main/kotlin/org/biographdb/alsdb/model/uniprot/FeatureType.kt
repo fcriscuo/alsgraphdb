@@ -142,7 +142,7 @@ class FeatureType {
      * [String]
      */
     @XmlAttribute(name = "type", required = true)
-    var type: String? = null
+    var type: String = "unclassified"
 
     /**
      * Gets the value of the id property.

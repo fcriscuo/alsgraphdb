@@ -13,6 +13,7 @@ import org.biographdb.alsdb.service.FetchUniProtProteinService
 import org.biographdb.alsdb.service.OgmDatabaseService
 import org.biographdb.alsdb.service.fetchHarmonizomeGenesByDiseaseAssociation
 import java.util.stream.Collectors
+import kotlin.contracts.ExperimentalContracts
 
 
 const val alsDiseaseSearchString = "amyotrophic+lateral+sclerosis"
@@ -26,6 +27,8 @@ class AlsDbImportApp(val disaseName: String) {
             .collect(Collectors.toList())
 
     // TODO: add null checks
+    @ExperimentalStdlibApi
+    @ExperimentalContracts
     fun resolveUniProtProtein(geneProteinGroup: HarmonizomeGeneProteinGroup): UniProtProtein {
         val uniProtProtein =
             UniProtProtein.createUniProtProteinFromHarmonizomeProtein(geneProteinGroup.harmonizomeProteinList.get(0))
@@ -43,6 +46,8 @@ class AlsDbImportApp(val disaseName: String) {
     }
 }
 
+@ExperimentalContracts
+@ExperimentalStdlibApi
 fun main() {
     AlsDbImportApp(alsDiseaseSearchString).apply {
         resolveHarmonizomeGeneProteinGroups().stream()

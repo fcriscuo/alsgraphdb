@@ -35,8 +35,6 @@ class GeneNameList(@Id val uniprotId: String) {
 }
 
 data class GeneName(val geneName: String, val nameType: String) : EvidenceSupported() {
-    @Id
-    val uuid = UUID.randomUUID().toString()
 
     fun isValid(): Boolean = geneName.isNotEmpty() && nameType.isNotEmpty()
 
@@ -45,10 +43,7 @@ data class GeneName(val geneName: String, val nameType: String) : EvidenceSuppor
             val name = gnt.value ?: ""
             val type = gnt.type ?: ""
             val geneName = GeneName(name, type)
-            val evidenceBuildResult = EvidenceSupportedValue.buildFromIds(gnt.getEvidenceList())
-            if (evidenceBuildResult.isRight()) {
-                geneName.evidenceSupportedValue = evidenceBuildResult.orNull()!!
-            }
+            geneName.evidenceSupportedValue = EvidenceSupportedValue.buildFromIds(gnt.getEvidenceList())
             return geneName
 
         }
