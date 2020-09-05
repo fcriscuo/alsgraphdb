@@ -304,8 +304,10 @@ class CommentType {
     var conflict: Conflict? = null
     protected var link: List<Link>? = null
     protected var event: List<EventType>? = null
-    protected var isoform: List<IsoformType>? = null
+    var isoform: List<IsoformType>? = null
     var interactant: List<InteractantType>? = null
+
+
 
     /**
      * Gets the value of the organismsDiffer property.

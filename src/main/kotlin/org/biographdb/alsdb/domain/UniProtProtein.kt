@@ -22,7 +22,7 @@ class UniProtProtein(@Id val uniprotId: String) {
     var sequence: String = ""
     var mass: Int = 0
 
-    @Relationship (type="HAS_GENE")
+    @Relationship(type = "HAS_GENE")
     lateinit var gene: Gene
 
     @Relationship(type = "HAS_ACCESSION_LIST")
@@ -46,40 +46,48 @@ class UniProtProtein(@Id val uniprotId: String) {
     @Relationship(type = "HAS_CITATION_LIST")
     lateinit var citationList: CitationList
 
+    @Relationship(type = "HAS_COMMENT_LIST")
+    lateinit var commentList: CommentList
+
+    @Relationship(type = "HAS_ISOFORM_LIST")
+    lateinit var isoformList: IsoformList
+
     fun completeGeneRelationship(relatedGene: Gene) {
         gene = relatedGene
     }
 
-   override fun toString(): String {
+    override fun toString(): String {
         val sb = StringBuilder()
-       sb.append("***UniprotId $uniprotId   name: $name  description:  $description\n")
-       sb.append("    Gene ${gene.symbol}   name: ${gene.symbol}\n")
-       sb.append ("   DB reference count: ${dbReferenceList.dbReferences.size}")
-       return sb.toString()
+        sb.append("***UniprotId $uniprotId   name: $name  description:  $description\n")
+        sb.append("    Gene ${gene.symbol}   name: ${gene.symbol}\n")
+        sb.append("   DB reference count: ${dbReferenceList.dbReferences.size}")
+        return sb.toString()
     }
 
     @ExperimentalContracts
     @ExperimentalStdlibApi
     fun completeUniProtProteinObject(entry: Entry) {
-            sequence = entry?.sequence?.value ?: ""
-            mass = entry?.sequence?.mass ?: 0
-            alternativeNameList = AlternativeNameList.resolveAlternativeNameListFromEntry(entry)
-            accessionList = AccessionList.resolveAccessionListFromEntry(entry)
-            dbReferenceList = DbReferenceList.resolveDbReferenceListFromEntry(entry)
-            keywordList = KeywordList.resolveKeywordListFromEntry(entry)
-            componentList = ComponentList.resolveComponentListFromEntry(entry)
-            geneNameList = GeneNameList.resolveGeneNameListFromEntry(entry)
-            citationList = CitationList.resolveCitationListFromEntry(entry)
+        sequence = entry?.sequence?.value ?: ""
+        mass = entry?.sequence?.mass ?: 0
+        alternativeNameList = AlternativeNameList.resolveAlternativeNameListFromEntry(entry)
+        accessionList = AccessionList.resolveAccessionListFromEntry(entry)
+        dbReferenceList = DbReferenceList.resolveDbReferenceListFromEntry(entry)
+        keywordList = KeywordList.resolveKeywordListFromEntry(entry)
+        componentList = ComponentList.resolveComponentListFromEntry(entry)
+        geneNameList = GeneNameList.resolveGeneNameListFromEntry(entry)
+        citationList = CitationList.resolveCitationListFromEntry(entry)
+        commentList = CommentList.resolveCommentListFromEntry(entry)
+        isoformList = IsoformList.buildFromUniProtEntry(entry)
     }
 
     companion object {
-        fun createUniProtProteinFromHarmonizomeProtein( harmonizomeProtein: HarmonizomeProtein): UniProtProtein {
+        fun createUniProtProteinFromHarmonizomeProtein(harmonizomeProtein: HarmonizomeProtein): UniProtProtein {
             val uniProtProtein = UniProtProtein(harmonizomeProtein.uniprotId)
-            with (uniProtProtein) {
-                    symbol = harmonizomeProtein.symbol
-                    name = harmonizomeProtein.name
-                    description = harmonizomeProtein.description
-                    uniprotXmlUrl = harmonizomeProtein.uniprotUrl.plus(".xml")
+            with(uniProtProtein) {
+                symbol = harmonizomeProtein.symbol
+                name = harmonizomeProtein.name
+                description = harmonizomeProtein.description
+                uniprotXmlUrl = harmonizomeProtein.uniprotUrl.plus(".xml")
             }
             return uniProtProtein
         }

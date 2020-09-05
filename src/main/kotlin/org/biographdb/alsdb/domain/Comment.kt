@@ -16,6 +16,17 @@ import org.neo4j.ogm.annotation.Relationship
 import java.util.*
 import kotlin.contracts.ExperimentalContracts
 
+const val DISEASE_COMMENT_TYPE = "disease"
+const val INTERACTION_COMMENT_TYPE = "interaction"
+const val SUBCELLULAR_COMMENT_TYPE = "subcellular location"
+const val TISSUE_SPECIFICITY_COMMENT_TYPE = "tissue specificity"
+const val INDUCTION_COMMENT_TYPE = "induction"
+const val DOMAIN_COMMENT_TYPE = "domain"
+const val PTM_COMMENT_TYPE = "PTM"
+const val MASS_SPEC_COMMENT_TYPE = "mass spectrometry"
+const val MISC_COMMENT_TYPE = "miscellaneous"
+
+
 @NodeEntity(label="CommentList")
 class CommentList (@Id val uniprotId: String) {
     @Relationship(type = "HAS_COMMENT")
@@ -29,11 +40,21 @@ class CommentList (@Id val uniprotId: String) {
             entry.getCommentList()?.forEach { commentType ->
                 run {
                     when (commentType.type) {
-                        "disease" -> commentList.comments.add(DiseaseComment.buildFromDiseaseType(commentType))
-                        "interaction" -> commentList.comments
+                        DISEASE_COMMENT_TYPE -> commentList.comments.add(DiseaseComment.buildFromDiseaseType(commentType))
+                        INTERACTION_COMMENT_TYPE -> commentList.comments
                                 .add(InteractionComment.buildFromInteractionType(commentType))
-                        "subcellular location" -> commentList.comments
+                        SUBCELLULAR_COMMENT_TYPE -> commentList.comments
                                 .add(SubCellularLocationComment.buildFromCommentType(commentType))
+                        DOMAIN_COMMENT_TYPE -> commentList.comments
+                                .add(DomainComment.buildFromCommentType(commentType))
+                        INDUCTION_COMMENT_TYPE -> commentList.comments
+                                .add(InductionComment.buildFromCommentType(commentType))
+                        PTM_COMMENT_TYPE -> commentList.comments
+                                .add(PtmComment.buildFromCommentType(commentType))
+                        MASS_SPEC_COMMENT_TYPE -> commentList.comments
+                                .add(MassSpecComment.buildFromCommentType(commentType))
+                        TISSUE_SPECIFICITY_COMMENT_TYPE -> commentList.comments
+                                .add(TissueSpecComment.buildFromCommentType(commentType))
                         else -> println("Comment Type: ${commentType.type} is not supported")
                     }
                 }
@@ -43,8 +64,9 @@ class CommentList (@Id val uniprotId: String) {
     }
 }
 
+
 @NodeEntity(label = "Comment")
-abstract class Comment : EvidenceSupported() {
+abstract class Comment (): EvidenceSupported() {
     @Labels
     val labels: MutableList<String> = ArrayList()
     var molecule: String = ""
@@ -52,6 +74,7 @@ abstract class Comment : EvidenceSupported() {
     var texts:MutableList<EvidenceSupportedValue> = mutableListOf()
     @Relationship (type="HAS_EVIDENCE_COLLECTION")
     lateinit var evidenceCollection: EvidenceCollection
+
 
     companion object{
         @ExperimentalContracts
@@ -78,6 +101,76 @@ abstract class Comment : EvidenceSupported() {
          }
     }
 }
+
+@ExperimentalContracts
+@NodeEntity (label = "MassSpec Comment")
+class MassSpecComment: Comment () {
+    var mass: Float = 0.0F
+    var method: String = ""
+    companion object{
+        @ExperimentalContracts
+        fun buildFromCommentType( commentType: CommentType): MassSpecComment {
+            val massSpecComment = MassSpecComment()
+            massSpecComment.mass = commentType.mass ?: 0.0F
+            massSpecComment.method = commentType.method ?: ""
+            Comment.initializeCommonAttributes(massSpecComment, commentType)
+            return massSpecComment
+        }
+    }
+}
+
+@ExperimentalContracts
+@NodeEntity (label = "Tissue Specificty Comment")
+class TissueSpecComment(): Comment() {
+    companion object {
+        @ExperimentalContracts
+        fun buildFromCommentType(commentType: CommentType): TissueSpecComment {
+            val tsComment = TissueSpecComment()
+            Comment.initializeCommonAttributes(tsComment, commentType)
+            return tsComment
+        }
+    }
+}
+
+
+@ExperimentalContracts
+@NodeEntity (label = "PTM Comment")
+class PtmComment: Comment() {
+    companion object{
+        @ExperimentalContracts
+        fun buildFromCommentType( commentType: CommentType): PtmComment {
+            val ptmComment = PtmComment()
+            Comment.initializeCommonAttributes(ptmComment, commentType)
+            return ptmComment
+        }
+    }
+}
+
+@NodeEntity( label = "Induction Comment" )
+class InductionComment: Comment() {
+    companion object{
+        @ExperimentalContracts
+        fun buildFromCommentType( commentType: CommentType): InductionComment {
+            val inductionComment = InductionComment()
+            Comment.initializeCommonAttributes(inductionComment, commentType)
+            return inductionComment
+        }
+    }
+}
+
+@NodeEntity (label = "Domain Comment")
+class DomainComment: Comment() {
+
+    companion object{
+        @ExperimentalContracts
+        fun buildFromCommentType(commentType: CommentType): DomainComment {
+            val domainComment = DomainComment()
+            Comment.initializeCommonAttributes(domainComment, commentType)
+            return domainComment
+        }
+    }
+}
+
 @NodeEntity (label = "SubCellularLocationComment")
 class SubCellularLocationComment : Comment() {
     @Relationship(type="HAS_SUBCELLULAR_LOCATION")
