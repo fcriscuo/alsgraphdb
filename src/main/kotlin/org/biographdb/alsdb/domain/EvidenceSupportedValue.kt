@@ -82,19 +82,6 @@ class EvidenceSupportedValue(val text: String = "") {
             return esv
         }
 
-//        fun resolveEvidenceListFromEvidenceTypeList(evidenceTypeList: List<EvidencedStringType>?):
-//                Either<String, EvidenceList> {
-//            if (evidenceTypeList.isNullOrEmpty()) {
-//                return Either.left("No Evidence relationships found")
-//            }
-//            val evidenceList = EvidenceList()
-//            evidenceTypeList.stream().map { est -> est. }
-//                    .filter { id -> id != null && EvidenceNodeMapService.containsEvidence(id) }
-//                    .forEach { id -> evidenceList.evidence.add(EvidenceNodeMapService.getEvidence(id!!)) }
-//            return Either.right(evidenceList)
-//        }
-
-
     }
 
 }
@@ -104,7 +91,8 @@ fun EvidencedStringType.assertValid(){
     contract{
         returns() implies (this@assertValid != null)
     }
-    if (this == null || this.value == null || this.getEvidenceList().isEmpty()){
+    //if (this == null || this.value == null || this.getEvidenceList().isEmpty()){
+    if (this == null || this.value == null ){
         throw Exception("Invalid EvidencedStringType")
     }
 }

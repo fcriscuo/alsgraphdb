@@ -10,31 +10,43 @@ import org.biographdb.alsdb.model.uniprot.IsoformType
 import org.neo4j.ogm.annotation.Id
 import org.neo4j.ogm.annotation.NodeEntity
 import org.neo4j.ogm.annotation.Relationship
+import java.util.stream.Collectors
+import java.util.stream.Stream
 import kotlin.contracts.ExperimentalContracts
 
-const val ALT_SPLICE_COMMENT_TYPE = "alternative splicing"
+const val ALT_PRODUCTS_COMMENT_TYPE = "alternative products"
 
 @NodeEntity (label = "Isoform List")
 class IsoformList (@Id val uniprotId: String) {
     @Relationship (type = "HAS_ISOFORM")
     var isoforms: MutableList<Isoform> = mutableListOf()
 
+    fun isValid(): Boolean = isoforms.isNotEmpty()
+
     companion object{
         @ExperimentalContracts
         fun buildFromUniProtEntry(entry: Entry): IsoformList {
            val isoformList = IsoformList(entry.getAccessionList()?.get(0) ?: "")
-            entry.getCommentList()?.stream()?.filter { commentType -> commentType.type == ALT_SPLICE_COMMENT_TYPE}
+            entry.getCommentList()?.stream()?.filter { commentType -> commentType.type == ALT_PRODUCTS_COMMENT_TYPE}
                     ?.map { commentType -> commentType.isoform}
                     ?.map {isoformList -> isoformList?.stream()}
-                    ?.forEach{isoformStream -> apply {
-                        isoformStream?.forEach { isformType -> isoformList.isoforms.add(Isoform.buildFromIsoformType(isformType)) }
-                    }}
+                    ?.forEach{isoformStream -> isoformList.isoforms.addAll(reduceIsoformStream(isoformStream))}
             return isoformList
         }
+
+        @ExperimentalContracts
+        fun reduceIsoformStream(isoformTypeStream: Stream<IsoformType>?): List<Isoform> =
+                if ( isoformTypeStream != null ) {
+                    isoformTypeStream.map { isoformType -> Isoform.buildFromIsoformType(isoformType) }
+                            .filter(Isoform::isValid)
+                            .collect(Collectors.toList())
+                } else {
+                    emptyList<Isoform>()
+                }
     }
 }
 @NodeEntity(label="Isoform Sequence")
-data class IsoformSequence(val id: String, val type: String) {
+data class IsoformSequence(@Id val id: String, val type: String) {
     @Relationship (type="HAS_ISOFORM_REF")
     var refs: MutableList<String> = mutableListOf()
 
@@ -62,6 +74,8 @@ class Isoform(@Id val id: String = "") {
     var textEvidence: MutableList<EvidenceSupportedValue> = mutableListOf()
 
     lateinit var sequence: IsoformSequence
+
+    fun isValid(): Boolean = !id.isNullOrEmpty() &&names.isNotEmpty()
 
     companion object {
         private val isoformNameLabel = "Isoform Name"

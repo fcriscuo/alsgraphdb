@@ -80,9 +80,17 @@ class UniProtProtein(@Id val uniprotId: String) {
         geneNameList = GeneNameList.resolveGeneNameListFromEntry(entry)
         citationList = CitationList.resolveCitationListFromEntry(entry)
         commentList = CommentList.resolveCommentListFromEntry(entry)
-        isoformList = IsoformList.buildFromUniProtEntry(entry)
+        completeIsoformList(entry)
+        //isoformList = IsoformList.buildFromUniProtEntry(entry)
         featureList = FeatureList.buildFromEntry(entry)
     }
+     @ExperimentalContracts
+     fun completeIsoformList(entry: Entry) {
+         val isoList = IsoformList.buildFromUniProtEntry(entry)
+         if ( isoList.isValid()){
+             isoformList = isoList
+         }
+     }
 
     companion object {
         fun createUniProtProteinFromHarmonizomeProtein(harmonizomeProtein: HarmonizomeProtein): UniProtProtein {
